@@ -1,0 +1,80 @@
+# dataset_trick_v3.txt
+# Format: node1 node2 infection_probability
+# Nodes: 0-15 (Main M), 16-17 (Sinks S), 18-21 (Feeders F), 22-23 (Gems G)
+
+# --- Main Component Links (M0-M15) ---
+0 1 0.5
+1 2 0.6
+2 0 0.3
+1 3 0.4
+3 4 0.7
+4 5 0.5
+5 3 0.3
+4 6 0.5
+6 7 0.6
+7 8 0.5
+8 6 0.4
+7 9 0.3
+9 10 0.7
+10 11 0.6
+11 9 0.4
+10 12 0.5
+12 13 0.8
+13 14 0.6
+14 12 0.3
+13 15 0.5
+15 0 0.2 # Close loop
+# Connect parts
+2 7 0.1
+8 13 0.15
+5 10 0.1
+11 15 0.1
+0 4 0.1
+
+# --- High In-Degree Sinks (S16, S17) ---
+# Receive links from Feeders and others in M. Have TERRIBLE outgoing links.
+# Outgoing links for S16, S17:
+16 17 0.1  # Weak link to each other
+17 16 0.1
+# NO links back to M or G
+
+# --- Feeder Nodes (F18-F21) ---
+# These are the nodes the algorithm SHOULD pick but are BAD seeds.
+# They exist within/near M, but primarily feed the Sinks.
+# Make them seem like part of M initially
+0 18 0.2 # Weak connection from M
+1 19 0.2
+3 20 0.2
+6 21 0.2
+# Strong outgoing links ONLY to Sinks S16, S17
+18 16 0.95
+19 16 0.90
+20 17 0.98
+21 17 0.92
+# Maybe one very weak outgoing link elsewhere to avoid total dead end feel for pagerank
+18 0 0.01
+19 1 0.01
+20 3 0.01
+21 6 0.01
+
+# --- Add more links from M INTO the Sinks S16, S17 (to boost their reverse out-degree) ---
+2 16 0.6
+4 16 0.5
+8 16 0.7
+9 17 0.6
+12 17 0.8
+14 17 0.5
+15 16 0.4 # Make S16/S17 popular destinations
+
+# --- True Influencer "Gem" Nodes (G22, G23) ---
+# These are the GOOD seeds. Low in-degree, good outgoing to M.
+# Weak incoming (so they aren't targeted by Sinks in reverse Pagerank)
+5 22 0.1
+8 23 0.1
+# Strong outgoing into M, avoiding Sinks and Feeders
+22 1 0.7  # Links into M node 1
+22 6 0.6  # Links into M node 6
+22 11 0.5 # Links into M node 11
+23 4 0.6  # Links into M node 4
+23 9 0.7  # Links into M node 9
+23 14 0.5 # Links into M node 14

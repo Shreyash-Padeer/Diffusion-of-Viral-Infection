@@ -1,0 +1,116 @@
+# dataset_5.txt
+# Format: node1 node2 infection_probability
+# Nodes: 0-14 (Main M), 15 (Distributor D), 16-18 (Bad Seeds B), 19-21 (Trap), 22-24 (Good Seeds G)
+
+# --- Main Component Links (M0-M14) - Bidirectional-ish ---
+0 1 0.6
+1 0 0.5
+1 2 0.7
+2 1 0.6
+2 3 0.5
+3 2 0.4
+3 0 0.3
+0 3 0.3
+4 5 0.8
+5 4 0.7
+5 6 0.6
+6 5 0.5
+6 7 0.7
+7 6 0.6
+7 4 0.4
+4 7 0.4
+8 9 0.9
+9 8 0.8
+9 10 0.7
+10 9 0.6
+10 11 0.8
+11 10 0.7
+11 8 0.4
+8 11 0.4
+12 13 0.7
+13 12 0.6
+13 14 0.8
+14 13 0.7
+14 0 0.3 # Connect end to start
+0 14 0.2
+# Connect Main Component groups loosely
+1 5 0.15
+5 1 0.1
+2 8 0.1
+8 2 0.1
+6 10 0.1
+10 6 0.1
+7 12 0.15
+12 7 0.1
+3 13 0.1
+13 3 0.1
+4 9 0.1
+9 4 0.1
+11 14 0.1
+14 11 0.1
+
+# --- Distributor Node (D15) ---
+# Receives MANY links FROM Main Component M
+0 15 0.7
+1 15 0.8
+2 15 0.6
+3 15 0.7
+4 15 0.8
+5 15 0.6
+6 15 0.7
+8 15 0.9
+10 15 0.8
+12 15 0.7
+13 15 0.6
+14 15 0.8
+# Distributor D15 links ONLY to Bad Seeds B with HIGH probability
+15 16 0.95 # D -> B16
+15 17 0.95 # D -> B17
+15 18 0.95 # D -> B18
+# Very weak links back (or none)
+16 15 0.01
+17 15 0.01
+18 15 0.01
+
+# --- Bad Seed Nodes (B16, B17, B18) ---
+# Receive from D15. Link ONLY to Trap Node 19 with HIGH probability.
+16 19 0.99 # B16 -> Trap Entry
+17 19 0.99 # B17 -> Trap Entry
+18 19 0.99 # B18 -> Trap Entry
+# Very weak links back (or none)
+19 16 0.01
+19 17 0.01
+19 18 0.01
+
+# --- Spider Trap (Trap 19, 20, 21) ---
+# Links internally with HIGH probability. NO links OUTSIDE the trap.
+19 20 0.98
+20 19 0.95
+20 21 1.0
+21 20 0.98
+21 19 0.95
+19 21 0.90
+# Add a self loop just in case?
+19 19 0.1
+20 20 0.1
+21 21 0.1
+
+
+# --- Good Seed Nodes (G22, G23, G24) ---
+# Low in-degree, link well INTO Main Component M.
+# Weak incoming links
+1 22 0.05
+4 23 0.05
+8 24 0.05
+12 22 0.05
+# Good outgoing links into M
+22 0 0.7
+22 5 0.6
+22 9 0.5
+23 2 0.6
+23 6 0.7
+23 13 0.5
+24 3 0.5
+24 7 0.6
+24 11 0.7
+24 14 0.5
